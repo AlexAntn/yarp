@@ -22,6 +22,7 @@ void print_callback(yarp::os::Log::LogType type,
                     const char* file,
                     const unsigned int line,
                     const char* func,
+                    double customTime,
                     double systemtime,
                     double networktime,
                     const char* comp_name);

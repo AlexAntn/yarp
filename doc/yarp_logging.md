@@ -292,9 +292,114 @@ is not true.
 When the code is compiled in release mode, these assertion will just disappear
 from the compiled code.
 
+## y*CustomTime family
+
+Users have the possibility of logging information using a custom timestamp, 
+including the timestamp in the macro. These macros expand on the previous macros'
+by including a customTime term.
+
+### Generic Macros
+
+| Level       | C-Style                                                       | Stream                                  |
+|:-----------:|---------------------------------------------------------------|-----------------------------------------|
+| `[TRACE]`   | `yTraceCustomTime(double customTime, const char* msg, ...)`   | `yTraceCustomTime(double customTime)`   |
+| `[DEBUG]`   | `yDebugCustomTime(double customTime, const char* msg, ...)`   | `yDebugCustomTime(double customTime)`   |
+| `[INFO]`    | `yInfoCustomTime(double customTime, const char* msg, ...)`    | `yInfoCustomTime(double customTime)`    |
+| `[WARNING]` | `yWarningCustomTime(double customTime, const char* msg, ...)` | `yWarningCustomTime(double customTime)` |
+| `[ERROR]`   | `yErrorCustomTime(double customTime, const char* msg, ...)`   | `yErrorCustomTime(double customTime)`   |
+| `[FATAL]`   | `yFatalCustomTime(double customTime, const char* msg, ...)`   | `yFatalCustomTime(double customTime)`   |
+
+### Macros with Components
+
+| Level       | Component C-Style                                                                                  | Component Stream                                                             |
+|:-----------:|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `[TRACE]`   | `yCTraceCustomTime(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCTraceCustomTime(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[DEBUG]`   | `yCDebugCustomTime(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCDebugCustomTime(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[INFO]`    | `yCInfoCustomTime(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`    | `yCInfoCustomTime(double customTime, const yarp::os::Logcomponent& comp)`    |
+| `[WARNING]` | `yCWarningCustomTime(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)` | `yCWarningCustomTime(double customTime, const yarp::os::Logcomponent& comp)` |
+| `[ERROR]`   | `yCErrorCustomTime(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCErrorCustomTime(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[FATAL]`   | `yCFatalCustomTime(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCFatalCustomTime(double customTime, const yarp::os::Logcomponent& comp)`   |
+
+### Limited Macros
+
+| Level       | C-Style                                                           | Stream                                      |
+|:-----------:|-------------------------------------------------------------------|---------------------------------------------|
+| `[TRACE]`   | `yTraceCustomTimeOnce(double customTime, const char* msg, ...)`   | `yTraceCustomTimeOnce(double customTime)`   |
+| `[DEBUG]`   | `yDebugCustomTimeOnce(double customTime, const char* msg, ...)`   | `yDebugCustomTimeOnce(double customTime)`   |
+| `[INFO]`    | `yInfoCustomTimeOnce(double customTime, const char* msg, ...)`    | `yInfoCustomTimeOnce(double customTime)`    |
+| `[WARNING]` | `yWarningCustomTimeOnce(double customTime, const char* msg, ...)` | `yWarningCustomTimeOnce(double customTime)` |
+| `[ERROR]`   | `yErrorCustomTimeOnce(double customTime, const char* msg, ...)`   | `yErrorCustomTimeOnce(double customTime)`   |
+| `[FATAL]`   | N/A                                                               | N/A                                         |
 
 
+| Level       | Component C-Style                                                                                      | Component Stream                                                                |
+|:-----------:|--------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| `[TRACE]`   | `yCTraceCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCTraceCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[DEBUG]`   | `yCDebugCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCDebugCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[INFO]`    | `yCInfoCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`    | `yCInfoCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp)`    |
+| `[WARNING]` | `yCWarningCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)` | `yCWarningCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp)` |
+| `[ERROR]`   | `yCErrorCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCErrorCustomTimeOnce(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[FATAL]`   | N/A                                                                                                    | N/A                                                                             |
 
+| Level       | C-Style                                                                 | Stream                                            |
+|:-----------:|-------------------------------------------------------------------------|---------------------------------------------------|
+| `[TRACE]`   | `yTraceCustomTimeThreadOnce(double customTime, const char* msg, ...)`   | `yTraceCustomTimeThreadOnce(double customTime)`   |
+| `[DEBUG]`   | `yDebugCustomTimeThreadOnce(double customTime, const char* msg, ...)`   | `yDebugCustomTimeThreadOnce(double customTime)`   |
+| `[INFO]`    | `yInfoCustomTimeThreadOnce(double customTime, const char* msg, ...)`    | `yInfoCustomTimeThreadOnce(double customTime)`    |
+| `[WARNING]` | `yWarningCustomTimeThreadOnce(double customTime, const char* msg, ...)` | `yWarningCustomTimeThreadOnce(double customTime)` |
+| `[ERROR]`   | `yErrorCustomTimeThreadOnce(double customTime, const char* msg, ...)`   | `yErrorCustomTimeThreadOnce(double customTime)`   |
+| `[FATAL]`   | N/A                                                                     | N/A                                               |
+
+
+| Level       | Component C-Style                                                                                            | Component Stream                                                                      |
+|:-----------:|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| `[TRACE]`   | `yCTraceCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCTraceCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[DEBUG]`   | `yCDebugCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCDebugCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[INFO]`    | `yCInfoCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`    | `yCInfoCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp)`    |
+| `[WARNING]` | `yCWarningCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)` | `yCWarningCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp)` |
+| `[ERROR]`   | `yCErrorCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp, const char* msg, ...)`   | `yCErrorCustomTimeThreadOnce(double customTime, const yarp::os::Logcomponent& comp)`   |
+| `[FATAL]`   | N/A                                                                                                          | N/A                                                                                   |
+
+| Level       | C-Style                                                                              | Stream                                                         |
+|:-----------:|--------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| `[TRACE]`   | `yTraceCustomTimeThrottle(double customTime, double period, const char* msg, ...)`   | `yTraceCustomTimeThrottle(double customTime, double period)`   |
+| `[DEBUG]`   | `yDebugCustomTimeThrottle(double customTime, double period, const char* msg, ...)`   | `yDebugCustomTimeThrottle(double customTime, double period)`   |
+| `[INFO]`    | `yInfoCustomTimeThrottle(double customTime, double period, const char* msg, ...)`    | `yInfoCustomTimeThrottle(double customTime, double period)`    |
+| `[WARNING]` | `yWarningCustomTimeThrottle(double customTime, double period, const char* msg, ...)` | `yWarningCustomTimeThrottle(double customTime, double period)` |
+| `[ERROR]`   | `yErrorCustomTimeThrottle(double customTime, double period, const char* msg, ...)`   | `yErrorCustomTimeThrottle(double customTime, double period)`   |
+| `[FATAL]`   | N/A                                                                                  | N/A                                                            |
+
+
+| Level       | Component C-Style                                                                                                         | Component Stream                                                                                   |
+|:-----------:|---------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------
+------------------------------------------------|
+| `[TRACE]`   | `yCTraceCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`   | `yCTraceCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`   |
+| `[DEBUG]`   | `yCDebugCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`   | `yCDebugCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`   |
+| `[INFO]`    | `yCInfoCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`    | `yCInfoCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`    |
+| `[WARNING]` | `yCWarningCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)` | `yCWarningCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)` |
+| `[ERROR]`   | `yCErrorCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`   | `yCErrorCustomTimeThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`   |
+| `[FATAL]`   | N/A                                                                                                                       | N/A                                                                                                |
+
+
+| Level       | C-Style                                                                                    | Stream                                                               |
+|:-----------:|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| `[TRACE]`   | `yTraceCustomTimeThreadThrottle(double customTime, double period, const char* msg, ...)`   | `yTraceCustomTimeThreadThrottle(double customTime, double period)`   |
+| `[DEBUG]`   | `yDebugCustomTimeThreadThrottle(double customTime, double period, const char* msg, ...)`   | `yDebugCustomTimeThreadThrottle(double customTime, double period)`   |
+| `[INFO]`    | `yInfoCustomTimeThreadThrottle(double customTime, double period, const char* msg, ...)`    | `yInfoCustomTimeThreadThrottle(double customTime, double period)`    |
+| `[WARNING]` | `yWarningCustomTimeThreadThrottle(double customTime, double period, const char* msg, ...)` | `yWarningCustomTimeThreadThrottle(double customTime, double period)` |
+| `[ERROR]`   | `yErrorCustomTimeThreadThrottle(double customTime, double period, const char* msg, ...)`   | `yErrorCustomTimeThreadThrottle(double customTime, double period)`   |
+| `[FATAL]`   | N/A                                                                                        | N/A                                                                  |
+
+
+| Level       | Component C-Style                                                                                                               | Component Stream                                                                                         |
+|:-----------:|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------
+------------------------------------------------------|
+| `[TRACE]`   | `yCTraceCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`   | `yCTraceCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`   |
+| `[DEBUG]`   | `yCDebugCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`   | `yCDebugCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`   |
+| `[INFO]`    | `yCInfoCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`    | `yCInfoCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`    |
+| `[WARNING]` | `yCWarningCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)` | `yCWarningCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)` |
+| `[ERROR]`   | `yCErrorCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period, const char* msg, ...)`   | `yCErrorCustomTimeThreadThrottle(double customTime, const yarp::os::Logcomponent& comp, double period)`   |
+| `[FATAL]`   | N/A                                                                                                                             | N/A                                                                                                      |
 
 
 ## Configuration

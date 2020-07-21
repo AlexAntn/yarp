@@ -28,6 +28,7 @@ void print_callback(yarp::os::Log::LogType type,
                     const char* file,
                     const unsigned int line,
                     const char* func,
+                    double customTime,
                     double systemtime,
                     double networktime,
                     const char* comp_name)
@@ -36,6 +37,7 @@ void print_callback(yarp::os::Log::LogType type,
     YARP_UNUSED(file);
     YARP_UNUSED(line);
     YARP_UNUSED(func);
+    YARP_UNUSED(customTime);
     YARP_UNUSED(systemtime);
     YARP_UNUSED(networktime);
     YARP_UNUSED(comp_name);

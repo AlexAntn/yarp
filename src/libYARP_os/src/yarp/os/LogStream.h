@@ -41,12 +41,14 @@ class YARP_os_API LogStream
                const char* fn,
                unsigned int l,
                const char* f,
+               const double ct,
                const yarp::os::Log::Predicate pred,
                const LogComponent& c) :
                 type(t),
                 file(fn),
                 line(l),
                 func(f),
+                customTime(ct),
                 systemtime(yarp::os::SystemClock::nowSystem()),
                 networktime(!yarp::os::Time::isClockInitialized() ? 0.0 : (yarp::os::Time::isSystemClock() ? systemtime : yarp::os::Time::now())),
                 pred(pred),
@@ -59,6 +61,7 @@ class YARP_os_API LogStream
         const char* file;                    // NOLINT(misc-non-private-member-variables-in-classes)
         unsigned int line;                   // NOLINT(misc-non-private-member-variables-in-classes)
         const char* func;                    // NOLINT(misc-non-private-member-variables-in-classes)
+        double customTime;                   // NOLINT(misc-non-private-member-variables-in-classes)
         double systemtime;                   // NOLINT(misc-non-private-member-variables-in-classes)
         double networktime;                  // NOLINT(misc-non-private-member-variables-in-classes)
         const yarp::os::Log::Predicate pred; // NOLINT(misc-non-private-member-variables-in-classes)
@@ -71,9 +74,10 @@ public:
                      const char* file,
                      unsigned int line,
                      const char* func,
+                     const double customTime,
                      const yarp::os::Log::Predicate pred = nullptr,
                      const LogComponent& comp = Log::defaultLogComponent()) :
-            stream(new Stream(type, file, line, func, pred, comp))
+            stream(new Stream(type, file, line, func, customTime, pred, comp))
     {
     }
 
@@ -110,6 +114,7 @@ public:
                             stream->file,
                             stream->line,
                             stream->func,
+                            stream->customTime,
                             stream->systemtime,
                             stream->networktime,
                             stream->comp);

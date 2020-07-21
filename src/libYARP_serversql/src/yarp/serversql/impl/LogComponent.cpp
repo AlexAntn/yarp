@@ -21,6 +21,7 @@ void yarp::serversql::impl::LogComponent::print_callback(yarp::os::Log::LogType 
                                                          const char* file,
                                                          const unsigned int line,
                                                          const char* func,
+                                                         double customTime,
                                                          double systemtime,
                                                          double networktime,
                                                          const char* comp_name)
@@ -28,7 +29,7 @@ void yarp::serversql::impl::LogComponent::print_callback(yarp::os::Log::LogType 
     auto minlev = minimumServersqlPrintLevel.load();
     if (type >= minlev) {
         if (minlev <= yarp::os::Log::DebugType) {
-            yarp::os::Log::printCallback()(type, msg, file, line, func, systemtime, networktime, comp_name);
+            yarp::os::Log::printCallback()(type, msg, file, line, func, customTime, systemtime, networktime, comp_name);
         } else {
             static const char* err_str = "[ERROR] ";
             static const char* warn_str = "[WARNING] ";

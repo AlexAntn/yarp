@@ -90,12 +90,22 @@ private:
 #  define yCTraceThreadOnce(component, ...)             yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADONCE_CALLBACK, component()).trace(__VA_ARGS__)
 #  define yCTraceThrottle(component, period, ...)       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THROTTLE_CALLBACK(period), component()).trace(__VA_ARGS__)
 #  define yCTraceThreadThrottle(component, period, ...) yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADTHROTTLE_CALLBACK(period), component()).trace(__VA_ARGS__)
+#  define yCTraceCustomTime(customTime, component, ...)                       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, nullptr, component()).trace(__VA_ARGS__)
+#  define yCTraceCustomTimeOnce(customTime, component, ...)                   yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_ONCE_CALLBACK, component()).trace(__VA_ARGS__)
+#  define yCTraceCustomTimeThreadOnce(customTime, component, ...)             yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADONCE_CALLBACK, component()).trace(__VA_ARGS__)
+#  define yCTraceCustomTimeThrottle(customTime, component, period, ...)       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THROTTLE_CALLBACK(period), component()).trace(__VA_ARGS__)
+#  define yCTraceCustomTimeThreadThrottle(customTime, component, period, ...) yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADTHROTTLE_CALLBACK(period), component()).trace(__VA_ARGS__)
 #else
 #  define yCTrace(component, ...)                       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCTraceOnce(component, ...)                   YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCTraceThreadOnce(component, ...)             YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCTraceThrottle(component, period, ...)       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCTraceThreadThrottle(component, period, ...) YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCTraceCustomTime(customTime, component, ...)                       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCTraceCustomTimeOnce(customTime, component, ...)                   YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCTraceCustomTimeThreadOnce(customTime, component, ...)             YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCTraceCustomTimeThrottle(customTime, component, period, ...)       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCTraceCustomTimeThreadThrottle(customTime, component, period, ...) YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #endif
 
 #ifndef YARP_NO_DEBUG_OUTPUT
@@ -104,12 +114,22 @@ private:
 #  define yCDebugThreadOnce(component, ...)             yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADONCE_CALLBACK, component()).debug(__VA_ARGS__)
 #  define yCDebugThrottle(component, period, ...)       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THROTTLE_CALLBACK(period), component()).debug(__VA_ARGS__)
 #  define yCDebugThreadThrottle(component, period, ...) yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADTHROTTLE_CALLBACK(period), component()).debug(__VA_ARGS__)
+#  define yCDebugCustomTime(customTime, component, ...)                       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, nullptr, component()).debug(__VA_ARGS__)
+#  define yCDebugCustomTimeOnce(customTime, component, ...)                   yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_ONCE_CALLBACK, component()).debug(__VA_ARGS__)
+#  define yCDebugCustomTimeThreadOnce(customTime, component, ...)             yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADONCE_CALLBACK, component()).debug(__VA_ARGS__)
+#  define yCDebugCustomTimeThrottle(customTime, component, period, ...)       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THROTTLE_CALLBACK(period), component()).debug(__VA_ARGS__)
+#  define yCDebugCustomTimeThreadThrottle(customTime, component, period, ...) yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADTHROTTLE_CALLBACK(period), component()).debug(__VA_ARGS__)
 #else
 #  define yCDebug(component, ...)                       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCDebugOnce(component, ...)                   YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCDebugThreadOnce(component, ...)             YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCDebugThrottle(component, period, ...)       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #  define yCDebugThreadThrottle(component, period, ...) YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCDebugCustomTime(customTime, component, ...)                       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCDebugCustomTimeOnce(customTime, component, ...)                   YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCDebugCustomTimeThreadOnce(customTime, component, ...)             YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCDebugCustomTimeThrottle(customTime, component, period, ...)       YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
+#  define yCDebugCustomTimeThreadThrottle(customTime, component, period, ...) YARP_UNUSED(component); yarp::os::Log::nolog(__VA_ARGS__)
 #endif
 
 #define yCInfo(component, ...)                          yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, nullptr, component()).info(__VA_ARGS__)
@@ -117,20 +137,36 @@ private:
 #define yCInfoThreadOnce(component, ...)                yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADONCE_CALLBACK, component()).info(__VA_ARGS__)
 #define yCInfoThrottle(component, period, ...)          yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THROTTLE_CALLBACK(period), component()).info(__VA_ARGS__)
 #define yCInfoThreadThrottle(component, period, ...)    yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADTHROTTLE_CALLBACK(period), component()).info(__VA_ARGS__)
+#define yCInfoCustomTime(customTime, component, ...)                          yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, nullptr, component()).info(__VA_ARGS__)
+#define yCInfoCustomTimeOnce(customTime, component, ...)                      yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_ONCE_CALLBACK, component()).info(__VA_ARGS__)
+#define yCInfoCustomTimeThreadOnce(customTime, component, ...)                yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADONCE_CALLBACK, component()).info(__VA_ARGS__)
+#define yCInfoCustomTimeThrottle(customTime, component, period, ...)          yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THROTTLE_CALLBACK(period), component()).info(__VA_ARGS__)
+#define yCInfoCustomTimeThreadThrottle(customTime, component, period, ...)    yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADTHROTTLE_CALLBACK(period), component()).info(__VA_ARGS__)
 
 #define yCWarning(component, ...)                       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, nullptr, component()).warning(__VA_ARGS__)
 #define yCWarningOnce(component, ...)                   yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_ONCE_CALLBACK, component()).warning(__VA_ARGS__)
 #define yCWarningThreadOnce(component, ...)             yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADONCE_CALLBACK, component()).warning(__VA_ARGS__)
 #define yCWarningThrottle(component, period, ...)       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THROTTLE_CALLBACK(period), component()).warning(__VA_ARGS__)
 #define yCWarningThreadThrottle(component, period, ...) yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADTHROTTLE_CALLBACK(period), component()).warning(__VA_ARGS__)
+#define yCWarningCustomTime(customTime, component, ...)                       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, nullptr, component()).warning(__VA_ARGS__)
+#define yCWarningCustomTimeOnce(customTime, component, ...)                   yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_ONCE_CALLBACK, component()).warning(__VA_ARGS__)
+#define yCWarningCustomTimeThreadOnce(customTime, component, ...)             yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADONCE_CALLBACK, component()).warning(__VA_ARGS__)
+#define yCWarningCustomTimeThrottle(customTime, component, period, ...)       yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THROTTLE_CALLBACK(period), component()).warning(__VA_ARGS__)
+#define yCWarningCustomTimeThreadThrottle(customTime, component, period, ...) yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADTHROTTLE_CALLBACK(period), component()).warning(__VA_ARGS__)
 
 #define yCError(component, ...)                         yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, nullptr, component()).error(__VA_ARGS__)
 #define yCErrorOnce(component, ...)                     yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_ONCE_CALLBACK, component()).error(__VA_ARGS__)
 #define yCErrorThreadOnce(component, ...)               yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADONCE_CALLBACK, component()).error(__VA_ARGS__)
 #define yCErrorThrottle(component, period, ...)         yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THROTTLE_CALLBACK(period), component()).error(__VA_ARGS__)
 #define yCErrorThreadThrottle(component, period, ...)   yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, YARP_THREADTHROTTLE_CALLBACK(period), component()).error(__VA_ARGS__)
+#define yCErrorCustomTime(customTime, component, ...)                         yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, nullptr, component()).error(__VA_ARGS__)
+#define yCErrorCustomTimeOnce(customTime, component, ...)                     yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_ONCE_CALLBACK, component()).error(__VA_ARGS__)
+#define yCErrorCustomTimeThreadOnce(customTime, component, ...)               yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADONCE_CALLBACK, component()).error(__VA_ARGS__)
+#define yCErrorCustomTimeThrottle(customTime, component, period, ...)         yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THROTTLE_CALLBACK(period), component()).error(__VA_ARGS__)
+#define yCErrorCustomTimeThreadThrottle(customTime, component, period, ...)   yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, YARP_THREADTHROTTLE_CALLBACK(period), component()).error(__VA_ARGS__)
 
 #define yCFatal(component, ...)                         yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, nullptr, component()).fatal(__VA_ARGS__)
+#define yCFatalCustomTime(customTime, component, ...)                         yarp::os::Log(__FILE__, __LINE__, __YFUNCTION__, customTime, nullptr, component()).fatal(__VA_ARGS__)
 
 #ifndef NDEBUG
 #  define yCAssert(component, x)                                                       \

@@ -62,6 +62,14 @@ public:
                const yarp::os::Log::Predicate pred,
                const LogComponent& comp);
 
+    // customTime constructor
+    LogPrivate(const char* file,
+               const unsigned int line,
+               const char* func,
+               const double customTime,
+               const yarp::os::Log::Predicate pred,
+               const LogComponent& comp);
+
     void log(yarp::os::Log::LogType type,
              const char *msg,
              va_list args) const;
@@ -71,6 +79,7 @@ public:
                                const char* file,
                                const unsigned int line,
                                const char* func,
+                               double customTime,
                                double systemtime,
                                double networktime,
                                const char* comp_name);
@@ -80,6 +89,7 @@ public:
                                  const char* file,
                                  const unsigned int line,
                                  const char* func,
+                                 double customTime,
                                  double systemtime,
                                  double networktime,
                                  const char* comp_name);
@@ -90,6 +100,7 @@ public:
                        const char* file,
                        const unsigned int line,
                        const char* func,
+                       double customTime,
                        double systemtime,
                        double networktime,
                        const LogComponent& comp_name);
@@ -101,12 +112,13 @@ public:
                                             const char* file,
                                             const unsigned int line,
                                             const char* func,
+                                            double customTime,
                                             double systemtime,
                                             double networktime,
                                             const char* comp_name)
     {
         if (auto cb = current_print_callback.load()) {
-            cb(type, msg, file, line, func, systemtime, networktime, comp_name);
+            cb(type, msg, file, line, func, customTime, systemtime, networktime, comp_name);
         }
     }
 
@@ -117,12 +129,13 @@ public:
                                               const char* file,
                                               const unsigned int line,
                                               const char* func,
+                                              double customTime,
                                               double systemtime,
                                               double networktime,
                                               const char* comp_name)
     {
         if (auto cb = current_forward_callback.load()) {
-            cb(type, msg, file, line, func, systemtime, networktime, comp_name);
+            cb(type, msg, file, line, func, customTime, systemtime, networktime, comp_name);
         }
     }
 
@@ -135,6 +148,7 @@ public:
     const char* file;                    // NOLINT(misc-non-private-member-variables-in-classes)
     const unsigned int line;             // NOLINT(misc-non-private-member-variables-in-classes)
     const char* func;                    // NOLINT(misc-non-private-member-variables-in-classes)
+    double customTime;                   // NOLINT(misc-non-private-member-variables-in-classes)
     double systemtime;                   // NOLINT(misc-non-private-member-variables-in-classes)
     double networktime;                  // NOLINT(misc-non-private-member-variables-in-classes)
     const yarp::os::Log::Predicate pred; // NOLINT(misc-non-private-member-variables-in-classes)
@@ -306,6 +320,7 @@ inline void forwardable_output(std::ostream* ost,
                                const char* file,
                                const unsigned int line,
                                const char* func,
+                               double customTime,
                                double systemtime,
                                double networktime,
                                const char* comp_name)
@@ -314,6 +329,7 @@ inline void forwardable_output(std::ostream* ost,
 
     // This generates the same string a Property containing the following keys:
     // * level
+    // * customTime
     // * systemtime
     // * networktime
     // * filename (if YARP_FORWARD_CODEINFO_ENABLE is enabled)
@@ -329,6 +345,7 @@ inline void forwardable_output(std::ostream* ost,
     // * backtrace (for FATAL or if requested using YARP_FORWARD_BACKTRACE_ENABLE)
 
     *ost << "(level " << yarp::os::impl::StoreString::quotedString(level) << ")";
+    *ost << "(customTime " << yarp::os::NetType::toString(customTime) << ")";
     *ost << " (systemtime " << yarp::os::NetType::toString(systemtime)  << ")";
     *ost << " (networktime " << yarp::os::NetType::toString(networktime)  << ")";
     if (yarp::os::impl::LogPrivate::forward_codeinfo.load()) {
@@ -366,12 +383,14 @@ inline void printable_output(std::ostream* ost,
                              const char* file,
                              const unsigned int line,
                              const char* func,
+                             double customTime,
                              double systemtime,
                              double networktime,
                              const char* comp_name)
 {
     YARP_UNUSED(file);
     YARP_UNUSED(line);
+    YARP_UNUSED(customTime);
     YARP_UNUSED(systemtime);
     YARP_UNUSED(networktime);
 
@@ -419,6 +438,7 @@ inline void printable_output_verbose(std::ostream* ost,
                                      const char* file,
                                      const unsigned int line,
                                      const char* func,
+                                     double customTime,
                                      double systemtime,
                                      double networktime,
                                      const char* comp_name)
@@ -429,6 +449,9 @@ inline void printable_output_verbose(std::ostream* ost,
     const char *color = logTypeToColor(t);
     const char *bgcolor = logTypeToBgColor(t);
     static const char *reserved_color = logTypeToColor(yarp::os::Log::LogTypeReserved);
+
+    // Print custom time
+    *ost << "[" << std::fixed << customTime << "] ";
 
     // Print time
     *ost << "[" << std::fixed << networktime << "] ";
@@ -552,11 +575,35 @@ yarp::os::impl::LogPrivate::LogPrivate(const char* file,
 #endif
 }
 
+// method with customTime
+yarp::os::impl::LogPrivate::LogPrivate(const char* file,
+                                       unsigned int line,
+                                       const char* func,
+                                       const double customTime,
+                                       const yarp::os::Log::Predicate pred,
+                                       const LogComponent& comp) :
+        file(file),
+        line(line),
+        func(func),
+        customTime(customTime),
+        systemtime(yarp::os::SystemClock::nowSystem()),
+        networktime(!yarp::os::NetworkBase::isNetworkInitialized() ? 0.0 : (yarp::os::Time::isSystemClock() ? systemtime : yarp::os::Time::now())),
+        pred(pred),
+        comp(comp)
+{
+#ifdef YARP_HAS_WIN_VT_SUPPORT
+    if (colored_output.load() && !yarp::os::impl::LogPrivate::vt_colors_enabled.load()) {
+        colored_output = enable_vt_colors();
+    }
+#endif
+}
+
 void yarp::os::impl::LogPrivate::print_callback(yarp::os::Log::LogType t,
                                                 const char* msg,
                                                 const char* file,
                                                 const unsigned int line,
                                                 const char* func,
+                                                double customTime,
                                                 double systemtime,
                                                 double networktime,
                                                 const char* comp_name)
@@ -575,11 +622,11 @@ void yarp::os::impl::LogPrivate::print_callback(yarp::os::Log::LogType t,
 
     if (yarprun_format.load()) {
         // Same output as forward_callback
-        forwardable_output(ost, t, msg, file, line, func, systemtime, networktime, comp_name);
+        forwardable_output(ost, t, msg, file, line, func, customTime, systemtime, networktime, comp_name);
     } else if (verbose_output.load()) {
-        printable_output_verbose(ost, t, msg, file, line, func, systemtime, networktime, comp_name);
+        printable_output_verbose(ost, t, msg, file, line, func, customTime, systemtime, networktime, comp_name);
     } else {
-        printable_output(ost, t, msg, file, line, func, systemtime, networktime, comp_name);
+        printable_output(ost, t, msg, file, line, func, customTime, systemtime, networktime, comp_name);
     }
     *ost << std::endl;
 }
@@ -589,6 +636,7 @@ void yarp::os::impl::LogPrivate::forward_callback(yarp::os::Log::LogType t,
                                                   const char* file,
                                                   const unsigned int line,
                                                   const char* func,
+                                                  double customTime, 
                                                   double systemtime,
                                                   double networktime,
                                                   const char* comp_name)
@@ -599,7 +647,7 @@ void yarp::os::impl::LogPrivate::forward_callback(yarp::os::Log::LogType t,
         return;
     }
     std::stringstream stringstream_buffer;
-    forwardable_output(&stringstream_buffer, t, msg, file, line, func, systemtime, networktime, comp_name);
+    forwardable_output(&stringstream_buffer, t, msg, file, line, func, customTime, systemtime, networktime, comp_name);
     LogForwarder::getInstance().forward(stringstream_buffer.str());
 }
 
@@ -653,7 +701,7 @@ void yarp::os::impl::LogPrivate::log(yarp::os::Log::LogType type,
                 out[p] = 0;
             }
 
-            do_log(type, out, file, line, func, systemtime, networktime, comp);
+            do_log(type, out, file, line, func, customTime, systemtime, networktime, comp);
 
             if (dyn_buf) {
                 yarp::os::Log(file, line, func, nullptr, log_internal_component).warning("Previous message was longer than the static buffer size, dynamic allocation was used");
@@ -670,13 +718,14 @@ void yarp::os::impl::LogPrivate::do_log(yarp::os::Log::LogType type,
                                         const char* file,
                                         const unsigned int line,
                                         const char* func,
+                                        double customTime,
                                         double systemtime,
                                         double networktime,
                                         const LogComponent& comp)
 {
     auto* print_cb = comp.printCallback(type);
     if (print_cb) {
-        print_cb(type, msg, file, line, func, systemtime, networktime, comp.name());
+        print_cb(type, msg, file, line, func, customTime, systemtime, networktime, comp.name());
     } else {
         if (comp != log_internal_component) {
             if (comp.name()) {
@@ -689,7 +738,7 @@ void yarp::os::impl::LogPrivate::do_log(yarp::os::Log::LogType type,
 
     auto* forward_cb = comp.forwardCallback(type);
     if(forward_cb) {
-        forward_cb(type, msg, file, line, func, systemtime, networktime, comp.name());
+        forward_cb(type, msg, file, line, func, customTime, systemtime, networktime, comp.name());
     } else {
         if (comp != log_internal_component) {
             if (comp.name()) {
@@ -836,6 +885,17 @@ yarp::os::Log::Log(const char* file,
 {
 }
 
+// method for Log with customTime
+yarp::os::Log::Log(const char* file,
+                   unsigned int line,
+                   const char* func,
+                   const double customTime,
+                   const Predicate pred,
+                   const LogComponent& comp) :
+        mPriv(new yarp::os::impl::LogPrivate(file, line, func, customTime, pred, comp))
+{
+}
+
 yarp::os::Log::Log() :
         mPriv(new yarp::os::impl::LogPrivate(nullptr, 0, nullptr, nullptr, nullptr))
 {
@@ -851,11 +911,12 @@ void yarp::os::Log::do_log(yarp::os::Log::LogType type,
                            const char* file,
                            const unsigned int line,
                            const char* func,
+                           double customTime,
                            double systemtime,
                            double networktime,
                            const LogComponent& comp)
 {
-    yarp::os::impl::LogPrivate::do_log(type, msg, file, line, func, systemtime, networktime, comp);
+    yarp::os::impl::LogPrivate::do_log(type, msg, file, line, func, customTime, systemtime, networktime, comp);
 }
 
 
@@ -873,6 +934,7 @@ yarp::os::LogStream yarp::os::Log::trace() const
                                mPriv->file,
                                mPriv->line,
                                mPriv->func,
+                               mPriv->customTime,
                                mPriv->pred,
                                mPriv->comp);
 }
@@ -892,6 +954,7 @@ yarp::os::LogStream yarp::os::Log::debug() const
                                mPriv->file,
                                mPriv->line,
                                mPriv->func,
+                               mPriv->customTime,
                                mPriv->pred,
                                mPriv->comp);
 }
@@ -910,6 +973,7 @@ yarp::os::LogStream yarp::os::Log::info() const
                                mPriv->file,
                                mPriv->line,
                                mPriv->func,
+                               mPriv->customTime,
                                mPriv->pred,
                                mPriv->comp);
 }
@@ -929,6 +993,7 @@ yarp::os::LogStream yarp::os::Log::warning() const
                                mPriv->file,
                                mPriv->line,
                                mPriv->func,
+                               mPriv->customTime,
                                mPriv->pred,
                                mPriv->comp);
 }
@@ -948,6 +1013,7 @@ yarp::os::LogStream yarp::os::Log::error() const
                                mPriv->file,
                                mPriv->line,
                                mPriv->func,
+                               mPriv->customTime,
                                mPriv->pred,
                                mPriv->comp);
 }
@@ -968,6 +1034,7 @@ yarp::os::LogStream yarp::os::Log::fatal() const
                                mPriv->file,
                                mPriv->line,
                                mPriv->func,
+                               mPriv->customTime,
                                mPriv->pred,
                                mPriv->comp);
 }
